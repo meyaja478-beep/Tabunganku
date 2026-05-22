@@ -102,7 +102,11 @@ Text(
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.pop(context);
+                 Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/',
+                  (route) => false,
+                  );
                 },
                 icon: Icon(Icons.logout),
                 label: Text("Logout"),
