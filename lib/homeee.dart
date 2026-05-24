@@ -17,6 +17,22 @@ class _HomeeeState extends State<Homeee> {
   int target = 1000000;
 final TextEditingController targetController = TextEditingController();
   List<String> riwayat = [];
+  int get totalPengeluaran {
+  int total = 0;
+
+  for (var item in riwayat) {
+    List<String> data = item.split('|');
+
+    if (data[0] == "Keluar") {
+      total += int.tryParse(
+            data[1].replaceAll("Rp ", ""),
+          ) ??
+          0;
+    }
+  }
+
+  return total;
+}
 
   @override
   void initState() {
@@ -31,7 +47,7 @@ final TextEditingController targetController = TextEditingController();
     setState(() {
       saldo = prefs.getInt('saldo') ?? 0;
       riwayat = prefs.getStringList('riwayat') ?? [];
-      target = prefs.getInt('target') ?? 1000000;
+        target = prefs.getInt('target') ?? 1000000;
     });
   }
 
@@ -55,6 +71,24 @@ final TextEditingController targetController = TextEditingController();
     });
 
     saveData();
+    // 🔥 NOTIF TARGET
+if (saldo >= target) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text("🎉 Selamat! Target tabungan tercapai"),
+      backgroundColor: Colors.green,
+    ),
+  );
+} else {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        "💰 Target belum tercapai. Sisa Rp ${target - saldo}",
+      ),
+      backgroundColor: Colors.orange,
+    ),
+  );
+}
   }
 
   // ✅ AMBIL SALDO
@@ -220,9 +254,34 @@ ElevatedButton.icon(
                     child: ListTile(
                       leading: Icon(Icons.warning, color: Colors.orange),
                       title: Text("Pengeluaran"),
-                      subtitle: Text("Kamu mengeluarkan Rp 50.000"),
+                      subtitle: Text(
+                       "Total pengeluaran Rp $totalPengeluaran"),
                     ),
                   ),
+                  Card(
+  child: ListTile(
+    leading: Icon(
+      saldo >= target
+          ? Icons.check_circle
+          : Icons.error,
+      color: saldo >= target
+          ? Colors.green
+          : Colors.red,
+    ),
+
+    title: Text(
+      saldo >= target
+          ? "Target Tercapai"
+          : "Target Belum Tercapai",
+    ),
+
+    subtitle: Text(
+      saldo >= target
+          ? "Selamat! Kamu berhasil mencapai target tabungan 🎉"
+          : "Sisa Rp ${target - saldo} lagi untuk mencapai target",
+    ),
+  ),
+),
                 ],
               ),
             ),
@@ -239,8 +298,8 @@ ElevatedButton.icon(
         onAmbil: ambilSaldo,
       ),
 
-      // ===== PROFIL =====
-      Profil(target: target),
+      // ===== PROFIL ==== =
+      Profil(target:target),
     ];
 
     return Scaffold(
