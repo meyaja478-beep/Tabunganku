@@ -15,6 +15,7 @@ class _HomeeeState extends State<Homeee> {
 
   int saldo = 0;
   int target = 1000000;
+final TextEditingController targetController = TextEditingController();
   List<String> riwayat = [];
 
   @override
@@ -30,6 +31,7 @@ class _HomeeeState extends State<Homeee> {
     setState(() {
       saldo = prefs.getInt('saldo') ?? 0;
       riwayat = prefs.getStringList('riwayat') ?? [];
+      target = prefs.getInt('target') ?? 1000000;
     });
   }
 
@@ -39,6 +41,7 @@ class _HomeeeState extends State<Homeee> {
 
     await prefs.setInt('saldo', saldo);
     await prefs.setStringList('riwayat', riwayat);
+    await prefs.setInt('target', target);
   }
 
   // ✅ TAMBAH SALDO
@@ -110,8 +113,59 @@ class _HomeeeState extends State<Homeee> {
                   ),
 
                   SizedBox(height: 5),
-                  Text("Target: Rp $target",
-                      style: TextStyle(color: Colors.white70)),
+                  Text(
+                    "Target: Rp $target",
+                      style: TextStyle(color: Colors.white70)
+                      ),
+
+SizedBox(height: 10),
+
+ElevatedButton.icon(
+  onPressed: () {
+    targetController.text = target.toString();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Ubah Target"),
+          content: TextField(
+            controller: targetController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              hintText: "Masukkan target baru",
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("Batal"),
+            ),
+
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  target =
+                      int.tryParse(targetController.text) ?? target;
+                });
+
+                saveData();
+
+                Navigator.pop(context);
+              },
+              child: Text("Simpan"),
+            ),
+          ],
+        );
+      },
+    );
+  },
+
+  icon: Icon(Icons.edit),
+  label: Text("Ubah Target"),
+),
                 ],
               ),
             ),
@@ -186,7 +240,7 @@ class _HomeeeState extends State<Homeee> {
       ),
 
       // ===== PROFIL =====
-      Profil(),
+      Profil(target: target),
     ];
 
     return Scaffold(

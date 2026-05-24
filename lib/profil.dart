@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
 class Profil extends StatelessWidget {
-  const Profil({super.key});
+
+  final int target;
+
+  const Profil({
+    super.key,
+    required this.target,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +85,7 @@ Text(
                   ListTile(
                     leading: Icon(Icons.savings, color: Colors.green),
                     title: Text("Target Tabungan"),
-                    subtitle: Text("Rp 1.000.000"),
+                    subtitle: Text("Rp $target"),
                   ),
                   Divider(height: 1),
 

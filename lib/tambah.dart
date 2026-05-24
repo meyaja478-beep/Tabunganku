@@ -128,7 +128,7 @@ class _TambahPageState extends State<TambahPage> {
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: "Masukkan Nominal",
-                      hintText: "Contoh: 50000",
+                      hintText: "?",
                       prefixText: "Rp ",
                       prefixStyle: const TextStyle(
                         fontSize: 28,
@@ -256,82 +256,6 @@ class _TambahPageState extends State<TambahPage> {
           ),
 
           const SizedBox(height: 18),
-
-          // ===== RESET =====
-          SizedBox(
-            width: double.infinity,
-            height: 80,
-            child: OutlinedButton(
-              onPressed: resetForm,
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.blue),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(22),
-                ),
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundColor: Colors.blue.shade50,
-                    child: const Icon(Icons.refresh, color: Colors.blue),
-                  ),
-                  const SizedBox(width: 20),
-                  const Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Reset",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        Text(
-                          "Kosongkan input nominal",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Icon(Icons.chevron_right, color: Colors.blue),
-                ],
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // ===== TIPS =====
-          Card(
-            color: Colors.blue.shade50,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const ListTile(
-              contentPadding: EdgeInsets.all(16),
-              leading: CircleAvatar(
-                backgroundColor: Colors.blue,
-                child: Icon(Icons.info, color: Colors.white),
-              ),
-              title: Text(
-                "Tips",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                ),
-              ),
-              subtitle: Padding(
-                padding: EdgeInsets.only(top: 8),
-                child: Text(
-                  "Gunakan menu ini untuk menambah atau mengambil saldo tabungan.",
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );
