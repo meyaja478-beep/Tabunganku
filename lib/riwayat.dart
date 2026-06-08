@@ -3,41 +3,75 @@ import 'package:flutter/material.dart';
 class Riwayat extends StatelessWidget {
   final List<String> riwayat;
 
-  const Riwayat({super.key, required this.riwayat});
+  const Riwayat({
+    super.key,
+    required this.riwayat,
+  });
 
   @override
   Widget build(BuildContext context) {
+    if (riwayat.isEmpty) {
+      return const Center(
+        child: Text("Belum ada riwayat"),
+      );
+    }
+
     return ListView.builder(
       itemCount: riwayat.length,
       itemBuilder: (context, index) {
         String item = riwayat[index];
 
-        bool isMasuk = item.contains("Masuk");
+        List<String> data = item.split('|');
+
+        String jenis = data.length > 0 ? data[0].trim() : '';
+        String nominal = data.length > 1 ? data[1].trim() : '';
+        String keterangan = data.length > 2 ? data[2].trim() : '-';
+        String tanggal = data.length > 3 ? data[3].trim() : '';
+
+        bool isMasuk = jenis == "Masuk";
 
         return Card(
-          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          margin: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 5,
+          ),
           child: ListTile(
             leading: Icon(
-              isMasuk ? Icons.arrow_downward : Icons.arrow_upward,
-              color: isMasuk ? Colors.green : Colors.red,
+              isMasuk
+                  ? Icons.arrow_downward
+                  : Icons.arrow_upward,
+              color: isMasuk
+                  ? Colors.green
+                  : Colors.red,
             ),
 
-            // 🔥 JUDUL (Masuk / Keluar)
             title: Text(
-              isMasuk ? "Uang Masuk" : "Uang Keluar",
-              style: TextStyle(
+              keterangan,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
 
-            // 🔥 SUBTITLE (Nominal)
-            subtitle: Text(item),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(jenis),
+                Text(
+                  tanggal,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
 
-            // 🔥 NOMINAL DI KANAN
             trailing: Text(
-              item.replaceAll("➕", "").replaceAll("➖", ""),
+              nominal,
               style: TextStyle(
-                color: isMasuk ? Colors.green : Colors.red,
+                color: isMasuk
+                    ? Colors.green
+                    : Colors.red,
                 fontWeight: FontWeight.bold,
               ),
             ),

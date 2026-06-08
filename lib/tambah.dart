@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TambahPage extends StatefulWidget {
-  final Function(int) onTambah;
-  final Function(int) onAmbil;
+  final Function(int, String) onTambah;
+  final Function(int, String) onAmbil;
 
   const TambahPage({
     super.key,
@@ -16,16 +16,19 @@ class TambahPage extends StatefulWidget {
 
 class _TambahPageState extends State<TambahPage> {
   final TextEditingController nominalController = TextEditingController();
+  final TextEditingController keteranganController = TextEditingController();
   int inputNominal = 0;
 
   @override
   void dispose() {
     nominalController.dispose();
+    keteranganController.dispose();
     super.dispose();
   }
 
   void resetForm() {
     nominalController.clear();
+    keteranganController.clear();
     setState(() {
       inputNominal = 0;
     });
@@ -33,7 +36,7 @@ class _TambahPageState extends State<TambahPage> {
 
   void tambahSaldo() {
     if (inputNominal > 0) {
-      widget.onTambah(inputNominal);
+      widget.onTambah(inputNominal, keteranganController.text,);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -48,7 +51,7 @@ class _TambahPageState extends State<TambahPage> {
 
   void ambilSaldo() {
     if (inputNominal > 0) {
-      widget.onAmbil(inputNominal);
+      widget.onAmbil(inputNominal, keteranganController.text);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -61,201 +64,219 @@ class _TambahPageState extends State<TambahPage> {
     }
   }
 
+  bool isMasuk = true;
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ===== CARD INPUT =====
-          Card(
-            elevation: 10,
-            shadowColor: Colors.black12,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(28),
+
+          const Text(
+            "Jenis Transaksi",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 45,
-                    backgroundColor: Colors.blue.shade50,
-                    child: Icon(
-                      Icons.account_balance_wallet,
-                      size: 50,
-                      color: Colors.blue,
-                    ),
-                  ),
+          ),
 
-                  const SizedBox(height: 20),
+          const SizedBox(height: 15),
 
-                  const Text(
-                    "Kelola Saldo",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF0D47A1),
-                    ),
-                  ),
+          Row(
+            children: [
 
-                  const SizedBox(height: 8),
-
-                  Text(
-                    "Tambah atau ambil saldo tabunganmu",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey.shade600,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  Container(
-                    width: 60,
-                    height: 4,
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isMasuk = true;
+                    });
+                  },
+                  child: Container(
+                    height: 120,
                     decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(10),
+                      color: isMasuk
+                          ? Colors.green.shade50
+                          : Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(
+                        color: isMasuk
+                            ? Colors.green
+                            : Colors.transparent,
+                        width: 2,
+                      ),
                     ),
-                  ),
+                    child: Column(
+                      mainAxisAlignment:
+                          MainAxisAlignment.center,
+                      children: [
 
-                  const SizedBox(height: 30),
-
-                  TextField(
-                    controller: nominalController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: "Masukkan Nominal",
-                      hintText: "?",
-                      prefixText: "Rp ",
-                      prefixStyle: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                      suffixIcon: const Icon(Icons.attach_money),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: const BorderSide(
-                          color: Colors.blue,
-                          width: 2,
+                        CircleAvatar(
+                          radius: 25,
+                          backgroundColor:
+                              Colors.green,
+                          child: const Icon(
+                            Icons.arrow_upward,
+                            color: Colors.white,
+                          ),
                         ),
+
+                        const SizedBox(height: 10),
+
+                        const Text(
+                          "Uang Masuk",
+                          style: TextStyle(
+                            fontWeight:
+                                FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(width: 15),
+
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isMasuk = false;
+                    });
+                  },
+                  child: Container(
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: !isMasuk
+                          ? Colors.red.shade50
+                          : Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(
+                        color: !isMasuk
+                            ? Colors.red
+                            : Colors.transparent,
+                        width: 2,
                       ),
                     ),
-                    onChanged: (value) {
-                      inputNominal = int.tryParse(value) ?? 0;
-                    },
+                    child: Column(
+                      mainAxisAlignment:
+                          MainAxisAlignment.center,
+                      children: [
+
+                        CircleAvatar(
+                          radius: 25,
+                          backgroundColor:
+                              Colors.red,
+                          child: const Icon(
+                            Icons.arrow_downward,
+                            color: Colors.white,
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        const Text(
+                          "Uang Keluar",
+                          style: TextStyle(
+                            fontWeight:
+                                FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
 
           const SizedBox(height: 25),
 
-          // ===== TAMBAH SALDO =====
-          SizedBox(
-            width: double.infinity,
-            height: 85,
-            child: ElevatedButton(
-              onPressed: tambahSaldo,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(22),
-                ),
+          const Text(
+            "Nominal",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          const SizedBox(height: 10),
+
+          TextField(
+            controller: nominalController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              prefixText: "Rp ",
+              border: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(15),
               ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 26,
-                    backgroundColor: Colors.white24,
-                    child: const Icon(Icons.add, size: 30, color: Colors.white),
-                  ),
-                  const SizedBox(width: 20),
-                  const Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Tambah Saldo",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "Menambah saldo tabungan",
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Icon(Icons.chevron_right, size: 35),
-                ],
+            ),
+            onChanged: (value) {
+              inputNominal =
+                  int.tryParse(value) ?? 0;
+            },
+          ),
+
+          const SizedBox(height: 25),
+
+          const Text(
+            "Keterangan",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          const SizedBox(height: 10),
+
+          TextField(
+            controller: keteranganController,
+            decoration: InputDecoration(
+              hintText:
+                  "Contoh: Uang Saku, Jajan",
+              border: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(15),
               ),
             ),
           ),
 
-          const SizedBox(height: 18),
+          const SizedBox(height: 35),
 
-          // ===== AMBIL SALDO =====
           SizedBox(
             width: double.infinity,
-            height: 85,
+            height: 60,
             child: ElevatedButton(
-              onPressed: ambilSaldo,
+              onPressed: () {
+
+                if (isMasuk) {
+                  tambahSaldo();
+                } else {
+                  ambilSaldo();
+                }
+              },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                foregroundColor: Colors.white,
-                elevation: 5,
+                backgroundColor:
+                    const Color(0xFF1565C0),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(22),
+                  borderRadius:
+                      BorderRadius.circular(15),
                 ),
               ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 26,
-                    backgroundColor: Colors.white24,
-                    child:
-                        const Icon(Icons.remove, size: 30, color: Colors.white),
-                  ),
-                  const SizedBox(width: 20),
-                  const Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Ambil Saldo",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "Mengambil saldo tabungan",
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Icon(Icons.chevron_right, size: 35),
-                ],
+              child: const Text(
+                "Simpan Transaksi",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
-
-          const SizedBox(height: 18),
         ],
       ),
     );
