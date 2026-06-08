@@ -4,7 +4,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'riwayat.dart';
 import 'tambah.dart';
 import 'profil.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class Homeee extends StatefulWidget {
   const Homeee({super.key});
