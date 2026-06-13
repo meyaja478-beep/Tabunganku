@@ -40,7 +40,7 @@ class _TambahPageState extends State<TambahPage> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Berhasil menambahkan Rp $inputNominal"),
+          content: Text("Be rhasil menambahkan Rp $inputNominal"),
           backgroundColor: Colors.green,
         ),
       );
